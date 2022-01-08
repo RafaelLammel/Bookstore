@@ -4,21 +4,21 @@ namespace Bookstore.Domain.Interfaces.Services
 {
     public interface IBookService
     {
-        Task<List<BookDTO>> GetAllBooksAsync();
+        Task<List<BookResponseDTO>> GetAllBooksAsync();
 
-        Task<BookDTO> GetBookByIdAsync(long id);
+        Task<BookResponseDTO> GetBookByIdAsync(long id);
 
-        Task<List<BookDTO>> GetAllBooksByNameAsync(string name);
+        Task<List<BookResponseDTO>> GetAllBooksByNameAsync(string name);
 
-        Task<BookDTO> GetBookByCodeAsync(int code);
+        Task<BookResponseDTO> GetBookByCodeAsync(int code);
 
-        Task<List<BookDTO>> GetBooksByCategoryAsync(string category);
+        Task<List<BookResponseDTO>> GetBooksByCategoryAsync(string category);
 
-        Task<List<BookDTO>> GetBooksByPriceRangeAsync(float min, float max);
+        Task<List<BookResponseDTO>> GetBooksByPriceRangeAsync(float min, float max);
 
-        Task SaveBookAsync(BookDTO book);
+        Task SaveBookAsync(BookRequestDTO book);
 
-        Task UpdateBookAsync(BookDTO book, long id);
+        Task UpdateBookAsync(BookRequestDTO book, long id);
 
         Task DeleteBookAsync(long id);
     }

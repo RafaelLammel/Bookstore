@@ -8,8 +8,8 @@ namespace Bookstore.Domain.Interfaces.Repositories
 
         Task<Book> FindByCodeAsync(int code);
 
-        Task<List<Book>> FindByCategoryAsync(string category);
+        Task<List<Book>> FindAllByCategoryAsync(string category);
 
-        Task<List<Book>> FindByPriceRangeAsync(float min, float max);
+        Task<List<Book>> FindAllByPriceRangeAsync(float min, float max);
     }
 }

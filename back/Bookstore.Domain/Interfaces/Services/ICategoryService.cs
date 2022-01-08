@@ -4,14 +4,14 @@ namespace Bookstore.Domain.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<List<CategoryDTO>> GetAllBooksAsync();
+        Task<List<CategoryDTO>> GetAllCategoriesAsync();
 
-        Task<CategoryDTO> GetBookByIdAsync(long id);
+        Task<CategoryDTO> GetCategoryByIdAsync(long id);
 
-        Task SaveBookAsync(CategoryDTO category);
+        Task SaveCategoryAsync(CategoryDTO category);
 
-        Task UpdateBookAsync(CategoryDTO category, long id);
+        Task UpdateCategoryAsync(CategoryDTO category, long id);
 
-        Task DeleteBookAsync(long id);
+        Task DeleteCategoryAsync(long id);
     }
 }
