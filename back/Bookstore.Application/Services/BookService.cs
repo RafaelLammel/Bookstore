@@ -19,11 +19,17 @@ namespace Bookstore.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<BookResponseDTO>> GetAllBooksAsync()
+        #nullable enable
+        public async Task<List<BookResponseDTO>> GetAllBooksAsync(string? name, string? category, float? minPrice, float? maxPrice)
         {
-            var b = await _bookRepository.FindAllAsync();
+            var b = await _bookRepository.FindAllWithFilterAsync(x => (name != null ? name == x.Name : true)
+                && (category != null ? category == x.Category.Name : true)
+                && (maxPrice != 0 ? maxPrice >= x.Price : true)
+                && (minPrice != 0 ? minPrice <= x.Price : true)
+            );
             return _mapper.Map<List<BookResponseDTO>>(b);
         }
+        #nullable disable
 
         public async Task<BookResponseDTO> GetBookByIdAsync(long id)
         {
@@ -31,28 +37,10 @@ namespace Bookstore.Application.Services
             return _mapper.Map<BookResponseDTO>(b);
         }
 
-        public async Task<List<BookResponseDTO>> GetAllBooksByNameAsync(string name)
-        {
-            var b = await _bookRepository.FindAllByNameAsync(name);
-            return _mapper.Map<List<BookResponseDTO>>(b);
-        }
-
         public async Task<BookResponseDTO> GetBookByCodeAsync(int code)
         {
             var b = await _bookRepository.FindByCodeAsync(code);
             return _mapper.Map<BookResponseDTO>(b);
-        }
-
-        public async Task<List<BookResponseDTO>> GetBooksByCategoryAsync(string category)
-        {
-            var b = await _bookRepository.FindAllByCategoryAsync(category);
-            return _mapper.Map<List<BookResponseDTO>>(b);
-        }
-
-        public async Task<List<BookResponseDTO>> GetBooksByPriceRangeAsync(float min, float max)
-        {
-            var b = await _bookRepository.FindAllByPriceRangeAsync(min, max);
-            return _mapper.Map<List<BookResponseDTO>>(b);
         }
 
         public async Task SaveBookAsync(BookRequestDTO book)
