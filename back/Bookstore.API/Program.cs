@@ -1,3 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Bookstore.Application.Services;
+using Bookstore.Domain.Interfaces.Repositories;
+using Bookstore.Domain.Interfaces.Services;
+using Bookstore.Infra;
+using Bookstore.Infra.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +13,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Package Services
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// App Services
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+
+// Repositories
+builder.Services.AddTransient<IBookRepository, BookRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 
