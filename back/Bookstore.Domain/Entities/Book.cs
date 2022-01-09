@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Bookstore.Domain.Entities
+﻿namespace Bookstore.Domain.Entities
 {
     public class Book
     {
