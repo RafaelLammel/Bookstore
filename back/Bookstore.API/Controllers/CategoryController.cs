@@ -35,14 +35,14 @@ namespace Bookstore.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<CategoryDTO>> GetCategoryById(long id)
+        public async Task<ActionResult> GetCategoryById(long id)
         {
             try
             {
                 var category = await _categoryService.GetCategoryByIdAsync(id);
                 if (category == null)
                     return NotFound();
-                return category;
+                return Ok(category);
             }
             catch (Exception ex)
             {
