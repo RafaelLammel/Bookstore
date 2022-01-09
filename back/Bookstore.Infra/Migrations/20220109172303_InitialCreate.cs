@@ -4,7 +4,7 @@
 
 namespace Bookstore.Infra.Migrations
 {
-    public partial class InitializeDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,7 @@ namespace Bookstore.Infra.Migrations
                     Price = table.Column<float>(type: "REAL", nullable: false),
                     Pages = table.Column<int>(type: "INTEGER", nullable: false),
                     Code = table.Column<int>(type: "INTEGER", nullable: false),
-                    CategoryId = table.Column<long>(type: "INTEGER", nullable: true)
+                    CategoryId = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,13 +40,26 @@ namespace Bookstore.Infra.Migrations
                         name: "FK_Books_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_CategoryId",
                 table: "Books",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_Code",
+                table: "Books",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

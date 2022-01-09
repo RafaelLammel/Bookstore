@@ -44,8 +44,7 @@ namespace Bookstore.Application.Services
 
         public async Task DeleteCategoryAsync(long id)
         {
-            var c = await _categoryRepository.FindByIdAsync(id);
-            await _categoryRepository.DeleteAsync(c);
+            await _categoryRepository.DeleteByIdCascadeAsync(id);
         }
     }
 }
