@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Bookstore.Domain.DTO;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces.Repositories;
@@ -9,11 +11,13 @@ namespace Bookstore.Application.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IValidator<Book> _bookValidator;
         private readonly IMapper _mapper;
 
-        public BookService(IBookRepository bookRepository, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IValidator<Book> bookValidator, IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _bookValidator = bookValidator;
             _mapper = mapper;
         }
 
@@ -42,17 +46,25 @@ namespace Bookstore.Application.Services
             return _mapper.Map<BookResponseDTO>(b);
         }
 
-        public async Task SaveBookAsync(BookRequestDTO book)
+        public async Task<ValidationResult> SaveBookAsync(BookRequestDTO book)
         {
             var b = _mapper.Map<Book>(book);
-            await _bookRepository.SaveAsync(b);
+            ValidationResult validation = await _bookValidator.ValidateAsync(b);
+            if (validation.IsValid)
+                await _bookRepository.SaveAsync(b);
+            return validation;
         }
 
-        public async Task UpdateBookAsync(BookRequestDTO book, long id)
+        public async Task<ValidationResult> UpdateBookAsync(BookRequestDTO book, long id)
         {
             var b = _mapper.Map<Book>(book);
-            b.Id = id;
-            await _bookRepository.UpdateAsync(b);
+            ValidationResult validation = await _bookValidator.ValidateAsync(b);
+            if (validation.IsValid)
+            {
+                b.Id = id;
+                await _bookRepository.UpdateAsync(b);
+            }
+            return validation;
         }
 
         public async Task DeleteBookAsync(long id)

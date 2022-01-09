@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Bookstore.Domain.DTO;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces.Repositories;
@@ -9,11 +11,13 @@ namespace Bookstore.Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IValidator<Category> _categoryValidator;
         private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepository, IValidator<Category> categoryValidator, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _categoryValidator = categoryValidator;
             _mapper = mapper;
         }
 
@@ -29,17 +33,25 @@ namespace Bookstore.Application.Services
             return _mapper.Map<CategoryDTO>(c);
         }
 
-        public async Task SaveCategoryAsync(CategoryDTO category)
+        public async Task<ValidationResult> SaveCategoryAsync(CategoryDTO category)
         {
             var c = _mapper.Map<Category>(category);
-            await _categoryRepository.SaveAsync(c);
+            ValidationResult validation = await _categoryValidator.ValidateAsync(c);
+            if(validation.IsValid)
+                await _categoryRepository.SaveAsync(c);
+            return validation;
         }
 
-        public async Task UpdateCategoryAsync(CategoryDTO category, long id)
+        public async Task<ValidationResult> UpdateCategoryAsync(CategoryDTO category, long id)
         {
             var c = _mapper.Map<Category>(category);
-            c.Id = id;
-            await _categoryRepository.UpdateAsync(c);
+            ValidationResult validation = await _categoryValidator.ValidateAsync(c);
+            if(validation.IsValid)
+            {
+                c.Id = id;
+                await _categoryRepository.UpdateAsync(c);
+            }
+            return validation;
         }
 
         public async Task DeleteCategoryAsync(long id)

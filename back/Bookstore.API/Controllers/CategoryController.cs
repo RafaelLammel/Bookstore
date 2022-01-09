@@ -1,6 +1,7 @@
-﻿using Bookstore.Domain.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using FluentValidation.Results;
+using Bookstore.Domain.DTO;
 using Bookstore.Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.API.Controllers
 {
@@ -16,42 +17,101 @@ namespace Bookstore.API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<CategoryDTO>> GetAllCategories()
+        public async Task<ActionResult> GetAllCategories()
         {
-            return await _categoryService.GetAllCategoriesAsync();
+            try
+            {
+                return Ok(await _categoryService.GetAllCategoriesAsync());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message
+                });
+            }
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<CategoryDTO>> GetCategoryById(long id)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
-                return NotFound();
-            return category;
+            try
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(id);
+                if (category == null)
+                    return NotFound();
+                return category;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message
+                });
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> SaveCategory([FromBody] CategoryDTO category)
         {
-            await _categoryService.SaveCategoryAsync(category);
-            return Created("v1/categories", category);
+            try
+            {
+                ValidationResult validation = await _categoryService.SaveCategoryAsync(category);
+                if(validation.IsValid)
+                    return Created("v1/categories", category);
+                return BadRequest(validation.Errors);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message
+                });
+            }
         }
 
         [HttpPut]
         [Route("{id}")]
         public async Task<ActionResult> UpdateCategory([FromBody] CategoryDTO category, long id)
         {
-            await _categoryService.UpdateCategoryAsync(category, id);
-            return NoContent();
+            try
+            {
+                ValidationResult validation = await _categoryService.UpdateCategoryAsync(category, id);
+                if(validation.IsValid)
+                    return NoContent();
+                return BadRequest(validation.Errors);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message
+                });
+            }
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> UpdateCategory(long id)
         {
-            await _categoryService.DeleteCategoryAsync(id);
-            return NoContent();
+            try
+            {
+                await _categoryService.DeleteCategoryAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message
+                });
+            }
         }
     }
 }

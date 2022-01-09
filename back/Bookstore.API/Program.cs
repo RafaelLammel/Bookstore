@@ -4,6 +4,9 @@ using Bookstore.Domain.Interfaces.Repositories;
 using Bookstore.Domain.Interfaces.Services;
 using Bookstore.Infra;
 using Bookstore.Infra.Repositories;
+using Bookstore.Domain.Entities;
+using FluentValidation;
+using Bookstore.Domain.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,10 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 // Repositories
 builder.Services.AddTransient<IBookRepository, BookRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+
+// Validators
+builder.Services.AddScoped<IValidator<Book>, BookValidator>();
+builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.DTO;
+﻿using FluentValidation.Results;
+using Bookstore.Domain.DTO;
 
 namespace Bookstore.Domain.Interfaces.Services
 {
@@ -8,9 +9,9 @@ namespace Bookstore.Domain.Interfaces.Services
 
         Task<CategoryDTO> GetCategoryByIdAsync(long id);
 
-        Task SaveCategoryAsync(CategoryDTO category);
+        Task<ValidationResult> SaveCategoryAsync(CategoryDTO category);
 
-        Task UpdateCategoryAsync(CategoryDTO category, long id);
+        Task<ValidationResult> UpdateCategoryAsync(CategoryDTO category, long id);
 
         Task DeleteCategoryAsync(long id);
     }

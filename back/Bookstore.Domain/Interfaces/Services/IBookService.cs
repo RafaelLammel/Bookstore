@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.DTO;
+﻿using FluentValidation.Results;
+using Bookstore.Domain.DTO;
 
 namespace Bookstore.Domain.Interfaces.Services
 {
@@ -12,9 +13,9 @@ namespace Bookstore.Domain.Interfaces.Services
 
         Task<BookResponseDTO> GetBookByCodeAsync(int code);
 
-        Task SaveBookAsync(BookRequestDTO book);
+        Task<ValidationResult> SaveBookAsync(BookRequestDTO book);
 
-        Task UpdateBookAsync(BookRequestDTO book, long id);
+        Task<ValidationResult> UpdateBookAsync(BookRequestDTO book, long id);
 
         Task DeleteBookAsync(long id);
     }
