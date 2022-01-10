@@ -23,7 +23,6 @@ Apart from technologies, I also tried to apply the following concepts, as I unde
 - **Migrations** (Entity Framework)
 
 ### Run the Project:
----
 
 To run this project, make sure you have .NET 6 SDK in your machine.
 
@@ -50,5 +49,5 @@ The project should start on https://localhost:7169 and http://localhost:5169.
 Swagger will run at https://localhost:7169/swagger/index.html
 
 ## Frontend (React)
----
-## WIP
+
+**WIP**
