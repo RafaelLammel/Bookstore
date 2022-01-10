@@ -6,7 +6,7 @@ This project was made to (or at least, attempt to) put in practice everything th
 
 The project is a web rest api with two entities, Book and Category, containing all CRUD operations for both, following the diagram:
 
-![project's class diagram](https://github.com/RafaelLammel/Bookstore/blob/master/bookstore.png?raw=true)
+![project's class diagram](https://raw.githubusercontent.com/RafaelLammel/Bookstore/master/Bookstore.png)
 
 Made in .NET 6, using the following:
 
