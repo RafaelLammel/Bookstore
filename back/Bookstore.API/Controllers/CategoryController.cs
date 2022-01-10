@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
 using Bookstore.Domain.DTO;
 using Bookstore.Domain.Interfaces.Services;
@@ -7,6 +8,7 @@ namespace Bookstore.API.Controllers
 {
     [ApiController]
     [Route("v1/categories")]
+    [Authorize(Roles = "ADMIN")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -28,7 +30,7 @@ namespace Bookstore.API.Controllers
                 return StatusCode(500, new
                 {
                     ErrorMessage = ex.Message,
-                    InnerException = ex.InnerException.Message
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
                 });
             }
         }
@@ -49,7 +51,7 @@ namespace Bookstore.API.Controllers
                 return StatusCode(500, new
                 {
                     ErrorMessage = ex.Message,
-                    InnerException = ex.InnerException.Message
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
                 });
             }
         }
@@ -69,7 +71,7 @@ namespace Bookstore.API.Controllers
                 return StatusCode(500, new
                 {
                     ErrorMessage = ex.Message,
-                    InnerException = ex.InnerException.Message
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
                 });
             }
         }
@@ -90,7 +92,7 @@ namespace Bookstore.API.Controllers
                 return StatusCode(500, new
                 {
                     ErrorMessage = ex.Message,
-                    InnerException = ex.InnerException.Message
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
                 });
             }
         }
@@ -109,7 +111,7 @@ namespace Bookstore.API.Controllers
                 return StatusCode(500, new
                 {
                     ErrorMessage = ex.Message,
-                    InnerException = ex.InnerException.Message
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
                 });
             }
         }

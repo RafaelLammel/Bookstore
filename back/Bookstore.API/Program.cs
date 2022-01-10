@@ -7,10 +7,18 @@ using Bookstore.Infra.Repositories;
 using Bookstore.Domain.Entities;
 using FluentValidation;
 using Bookstore.Domain.Validators;
+using Bookstore.API.Configurations.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddOptions<List<InMemoryBasicAuthOptions>>()
+.Configure<IConfiguration>((settings, configuration) =>
+    configuration.GetSection("InMemoryBasicAuth").Bind(settings)
+);
+
+builder.Services.AddAuthentication("BasicAuth").AddScheme<InMemoryBasicAuthSchemeOptions, InMemoryBasicAuthHandler>("BasicAuth", null);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -44,6 +52,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
