@@ -5,7 +5,9 @@ namespace Bookstore.Domain.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<List<CategoryDTO>> GetAllCategoriesAsync();
+        int GetCategoriesCount();
+
+        Task<List<CategoryDTO>> GetAllCategoriesAsync(int page, int pageSize);
 
         Task<CategoryDTO> GetCategoryByIdAsync(long id);
 

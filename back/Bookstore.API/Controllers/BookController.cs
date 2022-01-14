@@ -22,11 +22,15 @@ namespace Bookstore.API.Controllers
         public async Task<ActionResult> GetAllBooks([FromQuery(Name = "name")] string name,
             [FromQuery(Name = "category")] string category,
             [FromQuery(Name = "min_price")] float minPrice,
-            [FromQuery(Name = "max_price")] float maxPrice)
+            [FromQuery(Name = "max_price")] float maxPrice,
+            [FromQuery(Name = "page")] int page = 1,
+            [FromQuery(Name = "page_size")] int pageSize = 25)
         {
             try
             {
-                return Ok(await _bookService.GetAllBooksAsync(name, category, minPrice, maxPrice));
+                var books = await _bookService.GetAllBooksAsync(name, category, minPrice, maxPrice, page-1, pageSize);
+                var totalBooks = _bookService.GetBooksCount();
+                return Ok(new PagedResponseDTO<BookResponseDTO>(page, pageSize, totalBooks, $"/v1/books?name={name}&category={category}&min_price={minPrice}&max_price={maxPrice}", books));
             }
             catch (Exception ex)
             {
@@ -39,12 +43,33 @@ namespace Bookstore.API.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<ActionResult> GetBookById(long id)
         {
             try
             {
                 var book = await _bookService.GetBookByIdAsync(id);
+                if (book == null)
+                    return NotFound();
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerException = ex.InnerException.Message ?? "No Inner Exception"
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("code/{id:int}")]
+        public async Task<ActionResult> GetBookByCode(int code)
+        {
+            try
+            {
+                var book = await _bookService.GetBookByCodeAsync(code);
                 if (book == null)
                     return NotFound();
                 return Ok(book);

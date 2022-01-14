@@ -21,22 +21,30 @@ namespace Bookstore.Application.Services
             _mapper = mapper;
         }
 
-        #nullable enable
-        public async Task<List<BookResponseDTO>> GetAllBooksAsync(string? name, string? category, float? minPrice, float? maxPrice)
+        public int GetBooksCount()
         {
-            var b = await _bookRepository.FindAllIncludeCategoryWithFilterAsync(
+            return _bookRepository.Count();
+        }
+
+#nullable enable
+        public async Task<List<BookResponseDTO>> GetAllBooksAsync(string? name, string? category, float? minPrice, float? maxPrice, int skip, int take)
+        {
+            var b = await _bookRepository.FindAllAsync(
                 x => (name != null ? name == x.Name : true)
                 && (category != null ? category == x.Category.Name : true)
                 && (maxPrice != 0 ? maxPrice >= x.Price : true)
-                && (minPrice != 0 ? minPrice <= x.Price : true)
+                && (minPrice != 0 ? minPrice <= x.Price : true),
+                new string[] { "Category" },
+                skip,
+                take
             );
             return _mapper.Map<List<BookResponseDTO>>(b);
         }
-        #nullable disable
+#nullable disable
 
         public async Task<BookResponseDTO> GetBookByIdAsync(long id)
         {
-            var b = await _bookRepository.FindByIdWithCategoryAsync(id);
+            var b = await _bookRepository.FindByIdAsync(id, new string[] { "Category" });
             return _mapper.Map<BookResponseDTO>(b);
         }
 

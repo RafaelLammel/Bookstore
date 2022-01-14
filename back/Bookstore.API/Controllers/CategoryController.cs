@@ -19,11 +19,13 @@ namespace Bookstore.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllCategories()
+        public async Task<ActionResult> GetAllCategories([FromQuery(Name = "page")] int page = 1, [FromQuery(Name = "page_size")] int pageSize = 25)
         {
             try
             {
-                return Ok(await _categoryService.GetAllCategoriesAsync());
+                var categories = await _categoryService.GetAllCategoriesAsync(page-1, pageSize);
+                var totalCategories = _categoryService.GetCategoriesCount();
+                return Ok(new PagedResponseDTO<CategoryDTO>(page, pageSize, totalCategories, $"/v1/categories?", categories));
             }
             catch (Exception ex)
             {

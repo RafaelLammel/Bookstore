@@ -21,9 +21,14 @@ namespace Bookstore.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<CategoryDTO>> GetAllCategoriesAsync()
+        public int GetCategoriesCount()
         {
-            var c = await _categoryRepository.FindAllAsync();
+            return _categoryRepository.Count();
+        }
+
+        public async Task<List<CategoryDTO>> GetAllCategoriesAsync(int page, int pageSize)
+        {
+            var c = await _categoryRepository.FindAllAsync(page, pageSize);
             return _mapper.Map<List<CategoryDTO>>(c);
         }
 
