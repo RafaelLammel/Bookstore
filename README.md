@@ -46,6 +46,8 @@ dotnet run
 ```
 
 The project should start on https://localhost:7169 and http://localhost:5169.
+
+Hello
 Swagger will run at https://localhost:7169/swagger/index.html
 
 ## Frontend (React)
